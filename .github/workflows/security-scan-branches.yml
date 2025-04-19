@@ -1,0 +1,61 @@
+name: Snyk Security Test for Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - 'main' # Trigger only when a PR is made to the main branch
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: autopilot-cluster-1
+  GKE_ZONE: us-central1
+  USER_SERVICE_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/user-service:latest
+  DEPARTMENT_SERVICE_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/department-service:latest
+  CONFIG_SERVER_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/cloud-config-server:latest
+  CLOUD_GATEWAY_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/cloud-gateway:latest
+  HYSTRIX_DASHBOARD_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/hystrix-dashboard:latest
+  SERVICE_REGISTRY_IMAGE: docker.io/${{ secrets.DOCKER_USERNAME }}/service-registry:latest
+
+jobs:
+  snyk-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # SAST - Snyk Code Scan
+      - name: Snyk Code Scan - user-service
+        run: snyk code test user-service --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan - department-service
+        run: snyk code test department-service --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan - cloud-config-server
+        run: snyk code test cloud-config-server --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan - cloud-gateway
+        run: snyk code test cloud-gateway --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan - hystrix-dashboard
+        run: snyk code test hystrix-dashboard --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan - service-registry
+        run: snyk code test service-registry --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
