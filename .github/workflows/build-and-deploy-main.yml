@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main' # Trigger only on push to the main branch
+      - 'feature-branch'
   workflow_dispatch:
 
 env:
@@ -73,13 +74,16 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: docker.io
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-username: $MAVEN_USERNAME
+          server-password: $MAVEN_PASSWORD
 
       - name: Set up Snyk CLI
         uses: snyk/actions/setup@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and Push User-service
         run: mvn -B package dockerfile:push --file user-service/pom.xml

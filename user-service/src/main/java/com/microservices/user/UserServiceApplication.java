@@ -21,3 +21,5 @@ public class UserServiceApplication {
 		return new RestTemplate();
 	}
 }
+
+//Sample Test1

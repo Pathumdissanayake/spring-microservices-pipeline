@@ -103,7 +103,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<repository>harish101/department-service</repository>
+					<repository>dilharie/department-service</repository>
 					<tag>${project.version}</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
 				</configuration>
