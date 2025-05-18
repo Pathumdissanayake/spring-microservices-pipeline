@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user-service-app
-          image: harish101/user-service:0.0.1
+          image: dilharie/user-service:0.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 9002
