@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main' # Trigger only on push to the main branch
+      - 'feature-branch'
   workflow_dispatch:
 
 env:
